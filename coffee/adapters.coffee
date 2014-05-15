@@ -3,6 +3,7 @@
 Epoch._typeMap =
   'area': Epoch.Chart.Area
   'bar': Epoch.Chart.Bar
+  'bar-labeled': Epoch.Chart.LabeledBar
   'line': Epoch.Chart.Line
   'pie': Epoch.Chart.Pie
   'scatter': Epoch.Chart.Scatter

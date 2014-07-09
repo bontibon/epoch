@@ -30,7 +30,7 @@ class Epoch.Chart.Bar extends Epoch.Chart.Plot
   x: ->
     if @options.orientation == 'vertical'
       d3.scale.ordinal()
-        .domain(Epoch.Util.domain(@data))
+        .domain(@_domain())
         .rangeRoundBands([0, @innerWidth()], @options.padding.group, @options.outerPadding.group)
     else
       extent = @extent((d) -> d.y)
@@ -48,14 +48,14 @@ class Epoch.Chart.Bar extends Epoch.Chart.Plot
   # @return [Function] The y scale used to render the bar chart.
   y: ->
     if @options.orientation == 'vertical'
-      extent = @extent((d) -> d.y)
+      extent = @extent((d) => @getY(d))
       extent[0] = Math.min(0, extent[0])
       d3.scale.linear()
         .domain(extent)
         .range([@height - @margins.top - @margins.bottom, 0])
     else
       d3.scale.ordinal()
-        .domain(Epoch.Util.domain(@data))
+        .domain(@_domain())
         .rangeRoundBands([0, @innerHeight()], @options.padding.group, @options.outerPadding.group)
 
   # @return [Function] The x scale used to render the vertical bar chart.
@@ -64,6 +64,18 @@ class Epoch.Chart.Bar extends Epoch.Chart.Plot
       .domain((layer.category for layer in @data))
       .rangeRoundBands([0, y0.rangeBand()], @options.padding.bar, @options.outerPadding.bar)
 
+  # @return [Array] the full X domain of all data layers
+  _domain: ->
+    set = {}
+    domain = []
+    for layer in @data
+      for entry in layer.values
+        x = @getX(entry)
+        continue if set[x]?
+        domain.push(x)
+        set[x] = true
+    return domain
+
   # Remaps the bar chart data into a form that is easier to display.
   # @return [Array] The reorganized data.
   _remapData: ->
@@ -71,8 +83,10 @@ class Epoch.Chart.Bar extends Epoch.Chart.Plot
     for layer in @data
       className = 'bar ' + layer.className.replace(/\s*layer\s*/, '')
       for entry in layer.values
-        map[entry.x] ?= []
-        map[entry.x].push { label: layer.category, y: entry.y, className: className }
+        x = @getX(entry)
+        y = @getY(entry)
+        map[x] ?= []
+        map[x].push { label: layer.category, y: y, className: className }
     ({group: k, values: v} for k, v of map)
 
   # Draws the bar char.

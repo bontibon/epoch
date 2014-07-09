@@ -107,19 +107,6 @@ Epoch.Util.formatBytes = (v, fixed=1, fix_integers=false) ->
 Epoch.Util.dasherize = (str) ->
   Epoch.Util.trim(str).replace("\n", '').replace(/\s+/g, '-').toLowerCase()
 
-# @return the full domain of a given variable from an array of layers
-# @param [Array] layers Layered plot data.
-# @param [String] key The key name of the value at on each entry in the layers.
-Epoch.Util.domain = (layers, key='x') ->
-  set = {}
-  domain = []
-  for layer in layers
-    for entry in layer.values
-      continue if set[entry[key]]?
-      domain.push(entry[key])
-      set[entry[key]] = true
-  return domain
-
 # Strips whitespace from the beginning and end of a string.
 # @param [String] string String to trim.
 # @return [String] The string without leading or trailing whitespace.

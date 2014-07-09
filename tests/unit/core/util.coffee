@@ -17,28 +17,6 @@ describe 'Epoch.Util', ->
     it 'should trim leading and trailing whitespace before dasherizing', ->
       assert.equal Epoch.Util.dasherize('  Airieee is KewL '), 'airieee-is-kewl'
 
-  describe 'domain', ->
-    testLayers = [
-      { values: [{x: 'A', y: 10}, {x: 'B', y: 20}, {x: 'C', y: 40}] }
-    ]
-
-    testLayers2 = [
-      { values: [{x: 'A', y: 10}, {x: 'B', y: 20}, {x: 'C', y: 40}] },
-      { values: [{x: 'D', y: 15}, {x: 'E', y: 30}, {x: 'F', y: 90}] }
-    ]
-
-    it 'should find the correct domain of a set of keys and values', ->
-      xDomain = Epoch.Util.domain(testLayers, 'x')
-      assert.sameMembers xDomain, ['A', 'B', 'C']
-      yDomain = Epoch.Util.domain(testLayers, 'y')
-      assert.sameMembers yDomain, [10, 20, 40]
-
-    it 'should find all the values across multiple layers', ->
-      xDomain = Epoch.Util.domain(testLayers2, 'x')
-      assert.sameMembers xDomain, ['A', 'B', 'C', 'D', 'E', 'F']
-      yDomain = Epoch.Util.domain(testLayers2, 'y')
-      assert.sameMembers yDomain, [10, 20, 40, 15, 30, 90]
-
   describe 'toRGBA', ->
     it 'should produce the correct rgba style when given an rgba color style', ->
       assert.equal Epoch.Util.toRGBA('rgba(1, 2, 3, 0.4)', 0.1), 'rgba(1,2,3,0.1)'

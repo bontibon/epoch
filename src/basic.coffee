@@ -4,6 +4,8 @@
 # types.
 class Epoch.Chart.Plot extends Epoch.Chart.SVG
   defaults =
+    x: 'x'
+    y: 'y'
     margins:
       top: 25
       right: 50
@@ -71,14 +73,24 @@ class Epoch.Chart.Plot extends Epoch.Chart.SVG
   # @return [Function] The x scale for the visualization.
   x: ->
     d3.scale.linear()
-      .domain(@extent((d) -> d.x))
+      .domain(@extent((d) => @getX(d)))
       .range([0, @innerWidth()])
 
   # @return [Function] The y scale for the visualization.
   y: ->
     d3.scale.linear()
-      .domain(@extent((d) -> d.y))
+      .domain(@extent((d) => @getY(d)))
       .range([@innerHeight(), 0])
+
+  # TODO: document me
+  getX: (d) ->
+    x = @options.x
+    if Epoch.isFunction(x) then x(d) else d[x]
+
+  # TODO: document me
+  getY: (d) ->
+    y = @options.y
+    if Epoch.isFunction(y) then y(d) else d[y]
 
   # @return [Function] d3 axis to use for the bottom of the visualization.
   bottomAxis: ->

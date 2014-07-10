@@ -1,4 +1,3 @@
-
 # Static stacked area chart implementation using d3.
 class Epoch.Chart.Area extends Epoch.Chart.Plot
 
@@ -8,8 +7,11 @@ class Epoch.Chart.Area extends Epoch.Chart.Plot
     a = []
     for layer in @data
       for k, v of layer.values
-        a[k] += v.y if a[k]?
-        a[k] = v.y unless a[k]?
+        y = @_getY(v)
+        if a[k]?
+          a[k] += y
+        else
+          a[k] = y
     d3.scale.linear()
       .domain([0, d3.max(a)])
       .range([@height - @margins.top - @margins.bottom, 0])
@@ -19,9 +21,9 @@ class Epoch.Chart.Area extends Epoch.Chart.Plot
     [x, y] = [@x(), @y()]
 
     area = d3.svg.area()
-      .x((d) -> x(d.x))
+      .x((d) => x(@_getX(d)))
       .y0((d) -> y(d.y0))
-      .y1((d) -> y(d.y0 + d.y))
+      .y1((d) => y(d.y0 + @_getY(d)))
 
     stack = d3.layout.stack()
       .values((d) -> d.values)

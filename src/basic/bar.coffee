@@ -48,7 +48,7 @@ class Epoch.Chart.Bar extends Epoch.Chart.Plot
   # @return [Function] The y scale used to render the bar chart.
   y: ->
     if @options.orientation == 'vertical'
-      extent = @extent((d) => @getY(d))
+      extent = @extent((d) => @_getY(d))
       extent[0] = Math.min(0, extent[0])
       d3.scale.linear()
         .domain(extent)
@@ -70,7 +70,7 @@ class Epoch.Chart.Bar extends Epoch.Chart.Plot
     domain = []
     for layer in @data
       for entry in layer.values
-        x = @getX(entry)
+        x = @_getX(entry)
         continue if set[x]?
         domain.push(x)
         set[x] = true
@@ -83,8 +83,8 @@ class Epoch.Chart.Bar extends Epoch.Chart.Plot
     for layer in @data
       className = 'bar ' + layer.className.replace(/\s*layer\s*/, '')
       for entry in layer.values
-        x = @getX(entry)
-        y = @getY(entry)
+        x = @_getX(entry)
+        y = @_getY(entry)
         map[x] ?= []
         map[x].push { label: layer.category, y: y, className: className }
     ({group: k, values: v} for k, v of map)

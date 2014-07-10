@@ -4,7 +4,11 @@ class Epoch.Chart.Line extends Epoch.Chart.Plot
   # @return [Function] The line generator used to construct the plot.
   line: ->
     [x, y] = [@x(), @y()]
-    d3.svg.line().x((d) => (x d.x)).y((d) => (y d.y))
+    d3.svg.line()
+      .x((d) =>
+        x(@_getX(d)))
+      .y((d) =>
+        y(@_getY(d)))
 
   # Draws the line chart.
   draw: ->
